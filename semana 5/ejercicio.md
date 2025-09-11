@@ -16,5 +16,5 @@ Escribe un script en R para:
 3. Comparar cada ley con el umbral_ley usando una condición if.
 4. Si la ley es menor que el umbral, imprime un mensaje de alerta indicando el valor de la ley del lote y su posición (índice) en el vector.
 ## Sugerencia:
-• Para obtener el índice dentro del bucle, puedes usar la función seq_along(), que genera una secuencia de números del 1 al largo del vector.
-• El paste() puede ser muy útil para crear mensajes claros.
+* Para obtener el índice dentro del bucle, puedes usar la función seq_along(), que genera una secuencia de números del 1 al largo del vector.
+* El paste() puede ser muy útil para crear mensajes claros.
