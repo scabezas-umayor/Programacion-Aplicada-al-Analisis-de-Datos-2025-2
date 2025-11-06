@@ -30,6 +30,7 @@ Si R es el "motor" del auto, RStudio es el "tablero de control" (el volante, los
 # Usamos '<-' para guardar el resultado en una "caja" o "variable"
 # El nombre 'mi_valor' ahora contiene el número 42
 mi_valor <- 42
+print(mi_valor)
 ```
 
 ```r
@@ -100,12 +101,15 @@ Los tipos de datos atómicos (básicos) más comunes son:
 pi_aprox <- 3.14159
 # La función c() (de "combinar") crea vectores
 edades <- c(25, 30, 22)
+print(pi_aprox)
+print(edades)
 ```
 
 ```r
 # Ejemplo 2: Creación de un vector lógico
 # ¿Están aprobados estos estudiantes?
 aprobado <- c(TRUE, FALSE, TRUE, TRUE)
+print(aprobado)
 ```
 
 ```r
@@ -113,6 +117,7 @@ aprobado <- c(TRUE, FALSE, TRUE, TRUE)
 # Queremos ver el segundo elemento del vector 'aprobado'
 segundo_aprobado <- aprobado[2]
 # segundo_aprobado ahora contiene FALSE
+print(segundo_aprobado)
 ```
 
 ### ✏️ Ejercicios Propuestos
@@ -126,6 +131,10 @@ v_numeric <- 10.5
 v_integer <- 10L  # La L fuerza el tipo integer
 v_character <- "Hola R"
 v_logical <- TRUE # O T
+print(v_numeric)
+print(v_integer)
+print(v_character)
+print(v_logical)
 ```
 
 2. **Clase**: Usar las funciones class() y typeof() en cada una de las variables creadas en el ejercicio anterior. Ej: class(mi_variable_numerica). ¿Nota alguna diferencia?
