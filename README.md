@@ -4,11 +4,18 @@
 ## Habilitación de R de Google Colab
 
 1. Ir a: https://colab.research.google.com/
-2. El primer código debe ser:
+
+### Opción 1: Sugerida
+
+1. Ir a **Entorno de Ejecución** > Cambiar tipo de entorno de ejecución
+2. Tipo de Entorno cambiar **Python** por **R**
+
+### Opción 2: Sigue siendo Python
+1. El primer código debe ser:
 ```R
 %load_ext rpy2.ipython
 ```
-3. Todos los códigos que continúen deben tener en la primera línea ***%%R***.
+2. Todos los códigos que continúen deben tener en la primera línea ***%%R***.
 ```R
 %%R
 ```
