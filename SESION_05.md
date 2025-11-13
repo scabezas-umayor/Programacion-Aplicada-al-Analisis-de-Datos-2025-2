@@ -17,71 +17,79 @@ Es el formato de archivo plano más común. Es un archivo de texto donde las col
 * `read.csv("archivo.csv")`: Función base de R.
 * `read_csv("archivo.csv")`: Función del paquete `readr` (parte del Tidyverse). Es **mucho más rápida y recomendada**.
 
-**Archivos Excel (`.xlsx`)**
-Para leer archivos de Excel, necesitamos un paquete especializado. El más común es `readxl`.
-* `library(readxl)`: Cargar el paquete.
-* `read_excel("archivo.xlsx")`: Lee la primera hoja.
-* `read_excel("archivo.xlsx", sheet = "NombreDeLaHoja")`: Lee una hoja específica.
+**Archivos CSV (Formato Español/Latam)**
+Muchos archivos en español usan punto y coma (`;`) como separador y coma (`,`) para los decimales.
+* `read.csv2("archivo.csv")`: Función base de R para este formato.
+* `read_csv2("archivo.csv")`: Función de `readr` para este formato.
 
 ### 💻 Ejemplos de Código en R
 
 ```r
-# Ejemplo 1: Importar un CSV con la función base
-# (Asumiendo que "datos.csv" está en su carpeta de Proyecto)
-df_csv <- read.csv("datos.csv")
-````
-
-```r
-# Ejemplo 2: Importar un CSV con 'readr' (Recomendado)
+# Ejemplo 1: Importar un CSV estándar con 'readr' (Recomendado)
 # 1. Instalar (solo una vez)
 # install.packages("readr")
 # 2. Cargar
 library(readr)
-df_readr <- read_csv("datos.csv")
+
+# 3. Importar (Asumiendo que "datos_ventas.csv" está en su Proyecto)
+df_ventas <- read_csv("datos_ventas.csv")
+
 # 'readr' también muestra los tipos de columna que detectó
+````
+
+```r
+# Ejemplo 2: Importar un CSV formato español con 'readr'
+library(readr)
+# read_csv2 sabe que el separador es ';' y el decimal es ','
+df_notas <- read_csv2("datos_notas.csv")
 ```
 
 ```r
-# Ejemplo 3: Importar un archivo Excel
-# 1. Instalar (solo una vez)
-# install.packages("readxl")
-# 2. Cargar
-library(readxl)
-df_excel <- read_excel("mi_archivo_excel.xlsx", sheet = "Ventas_Q1")
+# Ejemplo 3: Importar un CSV con la función base (alternativa)
+# R base es más lento, pero es bueno conocerlo.
+# Para CSV estándar:
+df_ventas_base <- read.csv("datos_ventas.csv")
+
+# Para CSV español:
+df_notas_base <- read.csv2("datos_notas.csv")
 ```
 
 ### ✏️ Ejercicios Propuestos
 
-*Nota: Para estos ejercicios, los estudiantes necesitarían archivos de ejemplo. Puede crear un `datos_punto_coma.csv` y un `datos_excel.xlsx` para la clase.*
+*(Nota: Todos los ejercicios asumen que los archivos `datos_ventas.csv`, `datos_notas.csv` y `datos_sucios.csv` están en la carpeta de su Proyecto RStudio).*
 
-1.  **Práctica:** Muchos CSV en español no usan coma (`,`) como separador, sino punto y coma (`;`). La función base para esto es `read.csv2()`. Importar un archivo que utilice punto y coma (`;`) como separador.
-2.  **Laboratorio:** Importar datos de la **segunda hoja** (usando el índice `sheet = 2`) de un archivo Excel de ejemplo.
-3.  **Teórico:** ¿Por qué es mejor usar `read_csv()` (de `readr`) que `read.csv()` (base)? (Mencione 2 razones).
+1.  **Práctica:** Usando la función `read_csv()` del paquete `readr`, importe el archivo `datos_ventas.csv` y guárdelo en un data frame llamado `ventas`.
+2.  **Laboratorio:** Usando la función `read_csv2()` (o `read.csv2`), importe el archivo `datos_notas.csv` y guárdelo en un data frame llamado `notas`.
+3.  **Evaluación:** Importe el archivo `datos_sucios.csv` (use `read_csv`) y guárdelo en un data frame llamado `sucios`.
 
 ### ✅ Solución a los Ejercicios
 
 1.  **Práctica:**
     ```r
-    # Asumiendo que 'datos_punto_coma.csv' existe
+    # (Asegúrese de haber corrido 'library(readr)' primero)
+    ventas <- read_csv("datos_ventas.csv")
 
-    # Opción 1: Función base de R (hecha para esto)
-    datos_csv_es <- read.csv2("datos_punto_coma.csv")
-
-    # Opción 2: Con 'readr' (más explícito)
-    library(readr)
-    datos_csv_es_readr <- read_csv("datos_punto_coma.csv", delim = ";")
+    # Verificar las primeras filas
+    head(ventas)
     ```
 2.  **Laboratorio:**
     ```r
-    library(readxl)
+    # (Asegúrese de haber corrido 'library(readr)' primero)
+    # read_csv2 maneja automáticamente el ';' y la ',' decimal
+    notas <- read_csv2("datos_notas.csv")
 
-    # Asumiendo que 'datos_excel.xlsx' existe
-    # R cuenta las hojas desde 1
-    datos_hoja2 <- read_excel("datos_excel.xlsx", sheet = 2)
+    # Verificar las primeras filas y los tipos de datos
+    head(notas)
+    str(notas) # Debería mostrar Nota_1 y Nota_2 como 'double'
     ```
-3.  **Teórico:**
-    1.  **Velocidad:** `read_csv` es significativamente más rápida (a veces 10x o 100x) en archivos grandes porque está escrita en C++.
-    2.  **Consistencia:** `read_csv` es más "inteligente" al adivinar los tipos de columna, pero es más predecible. **Crucialmente**, `read_csv` **NO** convierte las cadenas de texto a factores por defecto, un comportamiento antiguo de `read.csv` que causa muchos problemas (`stringsAsFactors = TRUE`).
+3.  **Evaluación:**
+    ```r
+    # (Asegúrese de haber corrido 'library(readr)' primero)
+    sucios <- read_csv("datos_sucios.csv")
+
+    # Verificar
+    head(sucios)
+    ```
 
 -----
 
@@ -98,94 +106,93 @@ Funciones clave para "echar un vistazo" a un Data Frame (ej. `mi_df`):
       * Para columnas **numéricas**: Muestra Mínimo, 1er Cuartil, Mediana, Media, 3er Cuartil y Máximo.
       * Para columnas **categóricas (factores)**: Muestra el conteo de las categorías más frecuentes.
   * `head(mi_df)`: Muestra las primeras 6 filas.
-  * `tail(mi_df)`: Muestra las últimas 6 filas.
-  * `dim(mi_df)`: Muestra las dimensiones (ej. `[150, 5]` -\> 150 filas, 5 columnas).
-  * `names(mi_df)`: Muestra los nombres de las columnas.
+  * `dim(mi_df)`: Muestra las dimensiones (ej. `[50, 3]` -\> 50 filas, 3 columnas).
   * `table(mi_df$columna_categorica)`: Cuenta la frecuencia de cada categoría en una columna.
 
 ### 💻 Ejemplos de Código en R
 
-```r
-# Usaremos el dataset 'iris' que viene incluido en R
+*(Usaremos los data frames `ventas`, `notas` y `sucios` cargados en la sección anterior)*
 
+```r
 # Ejemplo 1: str() (Estructura)
-# Vemos 150 obs, 5 variables. 4 numéricas, 1 Factor.
-str(iris)
+# Inspeccionar el data frame de ventas
+str(ventas)
+# Debería mostrar 50 obs., 3 variables
+# Producto (chr), Precio (dbl), Stock (dbl)
 ```
 
 ```r
 # Ejemplo 2: summary() (Resumen)
-# Nos da los cuartiles para las 4 columnas numéricas
-# y el conteo para la columna categórica 'Species'
-summary(iris)
+# Obtener un resumen estadístico de las ventas
+summary(ventas)
+# Nos dará los cuartiles/media de Precio y Stock
+# y un resumen de la columna Producto (longitud, clase)
 ```
 
 ```r
 # Ejemplo 3: head() y table()
-# Ver las primeras 3 filas
-head(iris, n = 3)
+# Ver las primeras 3 filas de 'notas'
+head(notas, n = 3)
 
-# Contar cuántas flores hay de cada especie
-table(iris$Species)
-#     setosa versicolor  virginica 
-#         50         50         50 
+# Contar cuántas filas hay por 'Producto' en 'ventas'
+table(ventas$Producto)
 ```
 
 ### ✏️ Ejercicios Propuestos
 
-1.  **Práctica:** Cargar el Data Frame `mtcars` (viene en R, `data(mtcars)`). Usar `str()` y `summary()` para inspeccionarlo.
-2.  **Laboratorio:** Usando el Data Frame `iris`, calcular la media, mediana y desviación estándar (`sd`) *solo* de la columna `Sepal.Length`. (Pista: `iris$Sepal.Length`).
-3.  **Clase:** Generar una tabla de frecuencias (un conteo) para la variable `cyl` (número de cilindros) del Data Frame `mtcars`. ¿Cuántos autos tienen 4 cilindros?
+1.  **Práctica:** Ejecute `str(ventas)` y `summary(ventas)` en el data frame `ventas` que importó. ¿Cuál es el precio promedio (`Mean`) de los productos?
+2.  **Laboratorio:** Ejecute `summary(notas)` en el data frame `notas`. ¿Cuál es la mediana (`Median`) de `Nota_1` y la media (`Mean`) de `Nota_2`?
+3.  **Evaluación:** Cargue el data frame `sucios`. Use la función `table()` para contar cuántas personas (filas) hay registradas por `Ciudad`.
 
 ### ✅ Solución a los Ejercicios
 
 1.  **Práctica:**
     ```r
-    # Cargar el dataset (aunque usualmente ya está disponible)
-    data(mtcars)
+    # Asumiendo que 'ventas' fue cargado
+    summary(ventas)
 
-    # Inspeccionar estructura
-    str(mtcars)
-    # 'data.frame': 32 obs. of  11 variables:
-    # $ mpg : num  21 21 22.8 21.4 18.7 ...
-    # $ cyl : num  6 6 4 6 8 ...
-    # ... (Todas son 'num' (numéricas))
+    # Output (buscar en la columna Precio):
+    #   Precio      
+    # Min.   :0.650  
+    # 1st Qu.:1.200  
+    # Median :1.875  
+    # Mean   :2.158  
+    # 3rd Qu.:2.950  
+    # Max.   :4.700
 
-    # Inspeccionar resumen
-    summary(mtcars)
-    #      mpg             cyl             disp             hp       ...
-    # Min.   :10.40   Min.   :4.000   Min.   : 71.1   Min.   : 52.0  ...
-    # 1st Qu.:15.43   1st Qu.:4.000   1st Qu.:120.8   1st Qu.: 96.5  ...
-    # ...
+    # Respuesta: El precio promedio (Mean) es 2.158
     ```
 2.  **Laboratorio:**
     ```r
-    data(iris)
+    # Asumiendo que 'notas' fue cargado
+    summary(notas)
 
-    # Extraemos la columna como un vector numérico
-    largo_sepalo <- iris$Sepal.Length
+    # Output (buscar en las columnas correspondientes):
+    #     Nota_1          Nota_2     
+    # Min.   :2.800   Min.   :3.900  
+    # 1st Qu.:4.175   1st Qu.:4.375  
+    # Median :5.250   Median :5.650  
+    # Mean   :5.228   Mean   :5.480  
+    # 3rd Qu.:6.125   3rd Qu.:6.200  
+    # Max.   :7.000   Max.   :7.000  
 
-    # Calculamos las estadísticas
-    media_ls <- mean(largo_sepalo)
-    mediana_ls <- median(largo_sepalo)
-    desv_est_ls <- sd(largo_sepalo)
-
-    print(paste("Media:", media_ls))     # 5.843333
-    print(paste("Mediana:", mediana_ls)) # 5.8
-    print(paste("Desv. Estándar:", desv_est_ls)) # 0.8280661
+    # Respuesta: La Mediana de Nota_1 es 5.250. La Media de Nota_2 es 5.480.
     ```
-3.  **Clase:**
+3.  **Evaluación:**
     ```r
-    data(mtcars)
-
-    # Usamos table() en la columna 'cyl'
-    table(mtcars$cyl)
+    # Asumiendo que 'sucios' fue cargado
+    table(sucios$Ciudad)
 
     # Output:
-    # 4  6  8 
-    # 11  7 14 
+    # Concepcion      Madrid    Santiago    Valencia  Valparaiso 
+    #          5           8          13           7           7 
+    # (Nota: table() por defecto ignora los NAs)
+
+    # Para incluir los NAs (valores faltantes) en el conteo:
+    table(sucios$Ciudad, useNA = "ifany")
+    # Concepcion      Madrid    Santiago    Valencia  Valparaiso        <NA> 
+    #          5           8          13           7           7          10
     ```
-    **Respuesta:** 11 autos tienen 4 cilindros.
 
 -----
 
@@ -196,7 +203,7 @@ table(iris$Species)
 Rara vez los datos del mundo real vienen "limpios". La limpieza (o *wrangling*) es el proceso de tomar datos "sucios" y prepararlos para el análisis. A menudo es el 80% del trabajo.
 
 **Valores Faltantes (NA)**
-Es el problema más común.
+Es el problema más común (visto en `datos_sucios.csv`).
 
   * `is.na(mi_df)`: Devuelve una matriz de TRUE/FALSE indicando dónde hay NAs.
   * `sum(is.na(mi_df$columna))`: Cuenta cuántos NAs hay en una columna.
@@ -216,107 +223,117 @@ Es el problema más común.
   * `select(col1, col2)`: Selecciona **columnas**.
   * `mutate(nueva_col = ...)`: Crea o modifica columnas.
   * `arrange(columna)`: Ordena las filas.
-  * `group_by(col_categorica)` y `summarise(media = mean(col_num))` (los veremos más adelante).
 
 ### 💻 Ejemplos de Código en R
 
 ```r
-# Ejemplo 1: Manejo básico de NA
-df_sucio <- data.frame(a = c(1, 2, NA), b = c("X", NA, "Y"))
+# Ejemplo 1: Contar NAs en 'datos_sucios.csv'
+# (Asumiendo que 'sucios' está cargado)
 
-# Eliminar filas con NA
-df_limpio <- na.omit(df_sucio) 
-# 'df_limpio' solo tiene la fila 1
+# ¿Cuántas Edades faltan?
+sum(is.na(sucios$Edad))
+
+# ¿Cuántas Ciudades faltan?
+sum(is.na(sucios$Ciudad))
 ```
 
 ```r
 # Ejemplo 2: Imputación simple (reemplazar NA con la media)
-datos_con_na <- c(10, 20, NA, 40)
-media_sin_na <- mean(datos_con_na, na.rm = TRUE) # 23.33
-datos_imputados <- ifelse(is.na(datos_con_na), media_sin_na, datos_con_na)
-# [1] 10.0 20.0 23.3 40.0
+# 1. Calcular la media de Edad (ignorando los NAs existentes)
+media_edad <- mean(sucios$Edad, na.rm = TRUE) 
+# na.rm = TRUE es VITAL
+
+# 2. Usar ifelse para crear una nueva columna imputada
+sucios$Edad_Imputada <- ifelse(
+    is.na(sucios$Edad),  # Condición: Si la Edad es NA
+    media_edad,          # Valor si es TRUE
+    sucios$Edad          # Valor si es FALSE (dejar la edad original)
+)
 ```
 
 ```r
 # Ejemplo 3: dplyr y el pipe (%>%)
 # install.packages("dplyr")
 library(dplyr)
-data(mtcars)
 
-# Flujo de trabajo:
-# 1. Tomar 'mtcars'
-# 2. Y LUEGO... filtrar por filas donde 'mpg' > 20
-# 3. Y LUEGO... seleccionar solo las columnas 'mpg' y 'cyl'
-resultado_dplyr <- mtcars %>%
-  filter(mpg > 20) %>%
-  select(mpg, cyl)
+# Flujo de trabajo con 'ventas':
+# 1. Tomar 'ventas'
+# 2. Y LUEGO... filtrar por filas donde 'Stock' sea menor a 100
+# 3. Y LUEGO... seleccionar solo las columnas 'Producto' y 'Precio'
+resultado_dplyr <- ventas %>%
+  filter(Stock < 100) %>%
+  select(Producto, Precio)
 ```
 
 ### ✏️ Ejercicios Propuestos
 
-1.  **Práctica:** Crear un Data Frame que tenga una columna con NAs. Usar `is.na()` y `sum()` para contar cuántos NAs totales hay.
-2.  **Laboratorio:** Crear un Data Frame con una columna numérica (`valor`) que tenga 5 NAs. Remplazar esos NA por la **mediana** de la columna (use `median(..., na.rm = TRUE)`).
-3.  **Evaluación:** Usando `dplyr` y el dataset `iris`:
-    1.  Tome `iris`.
-    2.  `filter()` para quedarse solo con la especie "setosa".
-    3.  `select()` para quedarse solo con las columnas `Sepal.Length` y `Petal.Length`.
-    4.  `arrange()` para ordenar el resultado de mayor a menor `Petal.Length`.
+1.  **Práctica:** Cargue el data frame `sucios`. Use `sum(is.na(...))` para contar cuántos valores `NA` hay en la columna `Edad` y cuántos en la columna `Ciudad`.
+2.  **Laboratorio:** Usando el data frame `sucios`, cree una nueva columna llamada `Edad_Imputada_Mediana` que reemplace los `NA` de la columna `Edad` por la **mediana** de la misma columna. (Pista: use `median(..., na.rm = TRUE)`).
+3.  **Evaluación:** Usando `dplyr` y el data frame `ventas`:
+    1.  Tome `ventas`.
+    2.  `filter()` para quedarse solo con los productos que tengan un `Stock` **menor a 100**.
+    3.  `select()` para quedarse solo con las columnas `Producto` y `Stock`.
+    4.  `arrange()` para ordenar el resultado por `Stock` (de menor a mayor).
 
 ### ✅ Solución a los Ejercicios
 
 1.  **Práctica:**
     ```r
-    df_prueba_na <- data.frame(
-      a = c(1, 2, NA, 4),
-      b = c(NA, "X", "Y", "Z")
-    )
+    # Asumiendo que 'sucios' está cargado
 
-    # 1. Ver dónde están
-    is.na(df_prueba_na)
-    #         a     b
-    # [1,] FALSE  TRUE
-    # [2,] FALSE FALSE
-    # [3,]  TRUE FALSE
-    # [4,] FALSE FALSE
+    # Contar NAs en Edad
+    n_na_edad <- sum(is.na(sucios$Edad))
+    print(paste("NAs en Edad:", n_na_edad))
+    # Output: [1] "NAs en Edad: 6"
 
-    # 2. Contar el total
-    sum(is.na(df_prueba_na))
-    # [1] 2
+    # Contar NAs en Ciudad
+    n_na_ciudad <- sum(is.na(sucios$Ciudad))
+    print(paste("NAs en Ciudad:", n_na_ciudad))
+    # Output: [1] "NAs en Ciudad: 10"
     ```
 2.  **Laboratorio:**
     ```r
-    # 1. Creamos un df con 5 NAs (y otros datos)
-    datos_sucios <- data.frame(valor = c(10, 15, 12, NA, 5, NA, NA, 8, NA, NA))
+    # Asumiendo que 'sucios' está cargado
 
-    # 2. Calculamos la mediana (ignorando los NA existentes)
-    mediana_valor <- median(datos_sucios$valor, na.rm = TRUE)
-    # (La mediana de 10, 15, 12, 5, 8 es 10)
+    # 1. Calcular la mediana de Edad (ignorando los NAs)
+    mediana_edad <- median(sucios$Edad, na.rm = TRUE)
+    print(paste("La mediana de edad es:", mediana_edad)) # 35.5
 
-    # 3. Imputamos (usando ifelse)
-    datos_sucios$valor_imputado <- ifelse(
-      is.na(datos_sucios$valor), # Condición
-      mediana_valor,             # Si es VERDADERO (es NA)
-      datos_sucios$valor         # Si es FALSO (no es NA)
+    # 2. Usar mutate (de dplyr) o $ e ifelse (base R)
+
+    # Opción Base R (con ifelse):
+    sucios$Edad_Imputada_Mediana <- ifelse(
+      is.na(sucios$Edad),  # Condición
+      mediana_edad,        # Valor si TRUE
+      sucios$Edad          # Valor si FALSE
     )
 
-    print(datos_sucios)
+    # Opción con dplyr (más limpia):
+    # library(dplyr)
+    # sucios <- sucios %>%
+    #   mutate(Edad_Imputada_Mediana = ifelse(is.na(Edad), mediana_edad, Edad))
+
+    # Verificar (ej. filas 3 y 14 deberían tener 35.5)
+    print(sucios)
     ```
 3.  **Evaluación:**
     ```r
     library(dplyr)
-    data(iris)
+    # Asumiendo que 'ventas' está cargado
 
-    # El código se lee casi como inglés:
-    resultado_setosa <- iris %>%
-      filter(Species == "setosa") %>%
-      select(Sepal.Length, Petal.Length) %>%
-      arrange(desc(Petal.Length)) # desc() es para ordenar descendente
+    reporte_stock_bajo <- ventas %>%
+      filter(Stock < 100) %>%
+      select(Producto, Stock) %>%
+      arrange(Stock) # arrange por defecto ordena ascendente
 
-    # Ver el resultado
-    head(resultado_setosa)
-    #   Sepal.Length Petal.Length
-    # 1          5.4          1.9
-    # 2          5.0          1.9
-    # 3          5.1          1.9
-    # ...
+    # Mostrar el resultado
+    print(reporte_stock_bajo)
+
+    #    Producto Stock
+    #  <chr>    <dbl>
+    # 1 Sandia      30
+    # 2 Sandia      35
+    # 3 Sandia      38
+    # 4 Melon       40
+    # ... (etc.)
     ```
