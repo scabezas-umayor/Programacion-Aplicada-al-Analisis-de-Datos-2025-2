@@ -93,3 +93,7 @@ bombas_criticas <- registros_bomba %>%
 
 print(bombas_criticas);
 ```
+# Uniones
+
+https://bookdown.org/ddiannae/curso-rdata/uniones-para-mutar.html
+
